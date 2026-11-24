@@ -1,7 +1,7 @@
 FROM php:8.4-cli-bookworm
 
 RUN apt-get update \
- && apt-get install -y git unzip libzip-dev \
+ && apt-get install -y git git-lfs unzip libzip-dev \
  && docker-php-ext-install pdo_mysql zip \
  && rm -rf /var/lib/apt/lists/*
 
