@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Filament\Resources\Categories\Schemas;
+
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Schema;
+
+class CategoryForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make('Category Information')
+                    ->schema([
+                        Select::make('parent_id')
+                            ->label('Parent_category')
+                            ->placeholder('Select parent category (optional)')
+                            ->options(
+                                Category::whereNull('parent_id')
+                                    ->pluck('name', 'id')
+                            )
+                            ->nullable()
+                            ->searchable()
+                            ->preload()
+                            ->columnSpanfull(),
+                        TextInput::make('name')
+                            ->label('Category Name')
+                            ->required()
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdate(function (string $operation, $state, Set $set) {
+                                if ($operation === 'create') {
+                                    $set('slug', str::slug($state));
+                                }
+                            }),
+                        TextInput::make('slug')
+                            ->label('slug')
+                            ->required()
+                            ->maxlength(255)
+                            ->unique(Category::class, 'slug', ignoreRecord: true)
+                            ->helperText('slug is auto generated from category name')
+                        Toggle::make('status')
+                            ->label('Active Status')
+                            ->default(true)
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+            ]);
+    }
+}
