@@ -2,9 +2,14 @@
 
 namespace App\Filament\Resources\Categories\Schemas;
 
+use App\Models\Category;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class CategoryForm
 {
@@ -30,9 +35,9 @@ class CategoryForm
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdate(function (string $operation, $state, Set $set) {
+                            ->afterStateUpdated(function (string $operation, $state, Set $set) {
                                 if ($operation === 'create') {
-                                    $set('slug', str::slug($state));
+                                    $set('slug', Str::slug($state));
                                 }
                             }),
                         TextInput::make('slug')
@@ -40,7 +45,7 @@ class CategoryForm
                             ->required()
                             ->maxlength(255)
                             ->unique(Category::class, 'slug', ignoreRecord: true)
-                            ->helperText('slug is auto generated from category name')
+                            ->helperText('slug is auto generated from category name'),
                         Toggle::make('status')
                             ->label('Active Status')
                             ->default(true)

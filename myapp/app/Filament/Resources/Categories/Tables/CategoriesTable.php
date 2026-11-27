@@ -2,11 +2,15 @@
 
 namespace App\Filament\Resources\Categories\Tables;
 
+use App\Models\Category;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class CategoriesTable
@@ -19,24 +23,23 @@ class CategoriesTable
                     ->label('Category Name')
                     ->searchable()
                     ->sortable(),
-                TextCloumn::make('parent.name')
+                TextColumn::make('parent.name')
                     ->label('Parent Category')
                     ->default('-')
-                    ->searchable()
+                    ->searchable(),
                 TextColumn::make('slug')
                     ->label('Slug')
                     ->searchable()
-                    ->toggleable(isToggleHiddenByDefault: false),
+                    ->toggleable(isToggledHiddenByDefault : false),
                 TextColumn::make('children_count')
                     ->label('Subcategory')
-                    -.counts('children')
+                    ->counts('children')
                     ->badge()
                     ->color('info'),
-                IconColumn::make('status')
+                ToggleColumn::make('status')
                     ->label('Status')
                     ->onColor('success')
                     ->offColor('danger'),
-                    // ->boolean(),
                 TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime('d M Y')
@@ -48,8 +51,8 @@ class CategoriesTable
                     ->label('Status')
                     ->options([
                         '1' => 'active',
-                        '2' => 'inactive',
-                    ])
+                        '0' => 'inactive',
+                    ]),
                 SelectFilter::make('parent_id')
                     ->label('Parent Category')
                     ->options(
@@ -66,7 +69,7 @@ class CategoriesTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
             ->defaultSort('created_at', 'desc');
     }
 }
