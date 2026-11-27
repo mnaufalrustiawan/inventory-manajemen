@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'name'. 'slug', 'sku', 'category_id', 'unit_id', 'cost_price', 'selling_price', 'image', 'description', 'status'
+        'name', 'slug', 'sku', 'category_id', 'unit_id', 'cost_price',
+        'selling_price', 'image', 'description', 'status',
     ];
 
     protected $casts = [
@@ -42,6 +43,6 @@ class Product extends Model
     }
     public function totalStock()
     {
-        return $this->stock()->sum('quantity');
+        return $this->stocks()->sum('quantity');
     }
 }
