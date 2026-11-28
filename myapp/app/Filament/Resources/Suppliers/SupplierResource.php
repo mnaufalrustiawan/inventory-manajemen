@@ -27,7 +27,7 @@ class SupplierResource extends Resource
     
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $recordTitleAttribute = 'Supplier';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
     {
